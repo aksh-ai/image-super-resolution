@@ -1,0 +1,6 @@
+data/DIV2K_train_HR/
+data/DIV2K_valid_HR/
+models/
+results/evaluation/
+results/test/
+__pycache__/
