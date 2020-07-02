@@ -12,7 +12,7 @@ Photo-Realistic single image super-resolution using Generative Adversarial Netwo
 
 ## Results obtained
 
-Left image is Low Resolution Image, Middle image is original High Resolution Image, and the right image is the Generated Super-Resolution Image of the low resolution image.
+Left image is Low Resolution Image, Middle image is original High Resolution Image, and the right image is the Generated Super-Resolution Image.
 
 ### Sample 1
 
