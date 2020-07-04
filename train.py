@@ -48,7 +48,7 @@ if __name__ == '__main__':
 	print(f"Generator - Number of parameters: {sum(param.numel() for param in generator.parameters())}")
 	print(f"Discriminator - Number of parameters: {sum(param.numel() for param in discriminator.parameters())}\n\nStarting Training...\n")
 
-	# val_images = []
+	val_images = []
 
 	for epoch in range(1, EPOCHS+1):
 		print(f"Epoch [{epoch:03}/{EPOCHS}]")
