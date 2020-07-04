@@ -60,8 +60,17 @@ Change the testing configuration (Upscale Factor & Trained Model path) in the sc
 
 Pretrained model is available under the [trained_models](trained_models/) folder.
 
+### New Models
+
+* [Generator_2_64_100.pth](Generator_2_64_100.pth) - Generator model trained with new dataset for upscale factor 2 & crop size 64 (trained for 100 epochs)
+* [Discriminator_2_64_100.pth](Discriminator_2_64_100.pth) - Discriminator model trained with new dataset for upscale factor 2 & crop size 64 (trained for 100 epochs)
+
+### Old Models
+
 * [generator_2_100.pth](generator_2_100.pth) - Generator model for upscale factor 2 & crop size 88 (trained for 100 epochs)
+* [discriminator_2_100.pth](discriminator_2_100.pth) - Discriminator model for upscale factor 2 & crop size 88 (trained for 100 epochs)
 * [generator_4_100.pth](generator_4_100.pth) - Generator model for upscale factor 4 & crop size 96 (trained for 100 epochs)
+* [discriminator_4_100.pth](discriminator_4_100.pth) - Discriminator model for upscale factor 4 & crop size 96 (trained for 100 epochs)
 
 ## Module Description
 
