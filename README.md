@@ -8,7 +8,7 @@ Photo-Realistic single image super-resolution using Generative Adversarial Netwo
 
 ## Dataset
 
-[DIVerse 2K - DIV2K](https://data.vision.ee.ethz.ch/cvl/DIV2K/) resolution high quality images dataset was used for this project. Download the Train Data (HR images) and Validation Data (HR Images) zip files and extract them under **data** folder.
+[DIVerse 2K - DIV2K](https://data.vision.ee.ethz.ch/cvl/DIV2K/) resolution high quality images dataset and [VOC2012](https://www.kaggle.com/huanghanchina/pascal-voc-2012) dataset were both randomly sampled and was used as training and validation set for this project. Download the Train Data (HR images) and Validation Data (HR Images) zip files and extract them under **data** folder.
 
 ## Results obtained
 
@@ -18,13 +18,27 @@ Left image is Low Resolution Image, Middle image is original High Resolution Ima
 
 ![image 1](images/image1.png)
 
+![image 4](images/validate_index_12.png)
+
+![image 5](images/validate_index_1838.png)
+
+![image 8](images/validate_index_2890.png)
+
 ### Sample 2
 
 ![image 2](images/image2.png)
 
+![image 9](images/validate_index_3226.png)
+
+![image 10](images/validate_index_3969.png)
+
 ### Sample 3
 
 ![image 3](images/image3.png)
+
+![image 6](images/validate_index_2041.png)
+
+![image 7](images/validate_index_2577.png)
 
 ## Usage
 
@@ -91,8 +105,8 @@ Install the required libraries using [pip](https://pip.pypa.io/en/stable/) packa
 
 ## Future Scopes
 
-* Use a bigger and better dataset to obtain better results.
 * Try variants of SRGAN and do a comparison.
+* Build a Web UI in which user can upload low resolution images and convert them to high resolution images
 
 ## License
 
