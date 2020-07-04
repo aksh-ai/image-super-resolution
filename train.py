@@ -15,7 +15,7 @@ from utils import TrainDataset, ValidationDataset, display_transform
 if __name__ == '__main__':
 	torch.cuda.empty_cache()
 
-	CROP_SIZE = 88
+	CROP_SIZE = 64
 	UPSCALE_FACTOR = 2
 	EPOCHS = 100
 	BATCH_SIZE = 32
@@ -37,8 +37,8 @@ if __name__ == '__main__':
 
 	criterion = GeneratorLoss().to(device)
 
-	g_optim = torch.optim.RMSprop(generator.parameters(), lr=1e-5)
-	d_optim = torch.optim.RMSprop(discriminator.parameters(), lr=1e-5)
+	g_optim = torch.optim.Adam(generator.parameters(), lr=1e-5)
+	d_optim = torch.optim.Adam(discriminator.parameters(), lr=1e-5)
 
 	results = {'d_loss': [], 'g_loss': [], 'd_score': [], 'g_score': [], 'psnr': [], 'ssim': []}
 
@@ -48,7 +48,11 @@ if __name__ == '__main__':
 	print(f"Generator - Number of parameters: {sum(param.numel() for param in generator.parameters())}")
 	print(f"Discriminator - Number of parameters: {sum(param.numel() for param in discriminator.parameters())}\n\nStarting Training...\n")
 
+	# val_images = []
+
 	for epoch in range(1, EPOCHS+1):
+		print(f"Epoch [{epoch:03}/{EPOCHS}]")
+		
 		e_start_time = time.time()
 		epoch_results = {'batch_size': 0, 'd_loss': 0, 'g_loss': 0, 'd_score': 0, 'g_score': 0}
 
@@ -89,8 +93,8 @@ if __name__ == '__main__':
 			epoch_results['d_loss'] += d_loss.item() * batch_size
 			epoch_results['d_score'] += real_out.item() * batch_size
 			epoch_results['g_score'] += fake_out.item() * batch_size
-
-		print(f"Epoch [{epoch:03}/{EPOCHS}]\nDiscriminator - Loss: {epoch_results['d_loss'] / epoch_results['batch_size']:.4f} | Score: {epoch_results['d_score'] / epoch_results['batch_size']:.4f}")
+		
+		print(f"Discriminator - Loss: {epoch_results['d_loss'] / epoch_results['batch_size']:.4f} | Score: {epoch_results['d_score'] / epoch_results['batch_size']:.4f}")
 		print(f"Generator - Loss: {epoch_results['g_loss'] / epoch_results['batch_size']:.4f} | Score: {epoch_results['g_score'] / epoch_results['batch_size']:.4f}")
 
 		generator.eval()
@@ -114,7 +118,12 @@ if __name__ == '__main__':
 				batch_ssim = pyssim.ssim(sr, hr).item()
 				val_results['ssims'] += batch_ssim * batch_size
 
-				val_results['psnr'] = 10 * log10((hr.max()**2) / (val_results['mse'] / val_results['batch_size']))
+				try:
+					val_results['psnr'] = 10 * log10((hr.max()**2) / (val_results['mse'] / val_results['batch_size']))
+				
+				except ValueError:
+					val_results['psnr'] = 10 * (1 / (val_results['mse'] / val_results['batch_size']))
+
 				val_results['ssim'] = val_results['ssims'] / val_results['batch_size']
 			
 				val_images.extend([display_transform()(val_hr_restore.squeeze(0)), display_transform()(hr.data.cpu().squeeze(0)), display_transform()(sr.data.cpu().squeeze(0))])
@@ -127,12 +136,6 @@ if __name__ == '__main__':
 			print(f'Duration: {(time.time() - e_start_time)/60:.4} minutes | Saving results!\n')
 
 			out_path = os.path.join(OUTPUT_PATH, 'evaluation')
-
-			indx = 1
-			for image in val_images:
-				image = utils.make_grid(image, nrow=3, padding=5)
-				utils.save_image(image, os.path.join(out_path, f'epoch_{epoch}_index_{indx}.png'), padding=5)
-				indx += 1
 		
 		results['d_loss'].append(epoch_results['d_loss'] / epoch_results['batch_size'])
 		results['g_loss'].append(epoch_results['g_loss'] / epoch_results['batch_size'])
@@ -141,15 +144,21 @@ if __name__ == '__main__':
 		results['psnr'].append(val_results['psnr'])
 		results['ssim'].append(val_results['ssim'])
 
-		torch.save(generator.state_dict(), f'models/generator_{UPSCALE_FACTOR}_{epoch}.pth')
-		torch.save(discriminator.state_dict(), f'models/discriminator_{UPSCALE_FACTOR}_{epoch}.pth')
+		torch.save(generator.state_dict(), f'models/Generator_{UPSCALE_FACTOR}_{CROP_SIZE}_{epoch}.pth')
+		torch.save(discriminator.state_dict(), f'models/Discriminator_{UPSCALE_FACTOR}_{CROP_SIZE}_{epoch}.pth')
 
 		if epoch==1 or epoch==EPOCHS or epoch%10==0 and epoch != 0:
 			out_path = OUTPUT_PATH
 			
 			data_frame = pd.DataFrame(data={'Loss_D': results['d_loss'], 'Loss_G': results['g_loss'], 'Score_D': results['d_score'], 'Score_G': results['g_score'], 'PSNR': results['psnr'], 'SSIM': results['ssim']}, index=range(1, epoch + 1))
 			
-			data_frame.to_csv(os.path.join(out_path, 'srgan_' + str(UPSCALE_FACTOR) + '_train_results.csv'), index_label='Epoch')
+			data_frame.to_csv(os.path.join(out_path, 'SRGAN_' + str(UPSCALE_FACTOR) + '_train_results.csv'), index_label='Epoch')
+
+			indx = 1
+			for image in val_images:
+				image = utils.make_grid(image, nrow=3, padding=5)
+				utils.save_image(image, os.path.join(out_path, f'epoch_{epoch}_index_{indx}.png'), padding=5)
+				indx += 1
 	
 	print(f'Completed Training...\nTotal Training Duration: {(time.time() - training_start_time)/60:.4} minutes')
 
