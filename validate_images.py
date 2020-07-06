@@ -47,4 +47,4 @@ if __name__ == '__main__':
 			utils.save_image(image, os.path.join(out_path, f'validate_index_{indx}.png'), padding=5)
 			indx += 1
 			
-			print(f"{b} images converted and saved!")
+			# print(f"{b} images converted and saved!")
