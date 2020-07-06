@@ -46,5 +46,3 @@ if __name__ == '__main__':
 			image = utils.make_grid(val_images, nrow=3, padding=5)
 			utils.save_image(image, os.path.join(out_path, f'validate_index_{indx}.png'), padding=5)
 			indx += 1
-			
-			# print(f"{b} images converted and saved!")
