@@ -7,17 +7,19 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 UPSCALE_FACTOR = 2
 MODEL = 'trained_models/Generator_2_64_100.pth'
-IMAGE_PATH = str(input('Enter image path: '))
-OUTPATH = 'results/test/'
+IMAGE_PATH = input('Enter image path: ')
+OUPUT_PATH = 'results/test/'
 
 model = Generator(UPSCALE_FACTOR).eval().to(device)
 model.load_state_dict(torch.load(MODEL))
 
-img = Image.open(IMAGE_PATH)
-img = (transforms.toTensor()(img)).unsqueeze(0).to(device)
+def generate(img_path, output_path='results/test/'):
+  img = Image.open(img_path)
+  save_path = output_path+ 'sr_' + img_path.split('/')[-1]
+  img = (transforms.ToTensor()(img)).unsqueeze(0).to(device)
+  img = model(img)
+  img = transforms.ToPILImage()(img[0].detach().data.cpu())
+  img.save(save_path)
+  return img, save_path
 
-sr_image = model(img)
-
-sr_image = transforms.ToPILImage()(sr_image[0].data.cpu())
-
-sr_image.save(OUTPATH + 'sr_' + IMAGE_PATH.split('/')[-1])
+_, _ = generate(IMAGE_PATH, OUPUT_PATH)
