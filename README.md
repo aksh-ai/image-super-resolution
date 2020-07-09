@@ -50,6 +50,8 @@ Change the testing configuration (Upscale Factor & Trained Model path) in the sc
 
 `python test.py`
 
+Check this [colab notebook](https://colab.research.google.com/drive/1yWu4GAfAH6P8nQNVXCSA8mUPaBXOz2SP?usp=sharing) for simple prediction pipeline.
+
 ## Pretrained model
 
 Pretrained model is available under the [trained_models](trained_models/) folder.
